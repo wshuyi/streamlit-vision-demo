@@ -1,6 +1,5 @@
-streamlit>=1.28.0
-fastai>=2.7.0
-torch>=2.0.0
-torchvision>=0.15.0
-pillow>=9.0.0
-pathlib 
+streamlit==1.45.1
+fastai==2.7.15
+torch==2.6.0
+torchvision==0.21.0
+pillow==10.4.0 
