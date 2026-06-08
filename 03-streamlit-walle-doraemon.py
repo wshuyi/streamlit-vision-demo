@@ -6,20 +6,6 @@ if sys.version_info >= (3, 13):
     st.error("⚠️ 当前 Python 版本为 3.13+，可能与 fastai 不兼容。建议使用 Python 3.11。")
     st.stop()
 
-import importlib
-import pkgutil
-
-# --- 兼容性修复：plum-dispatch 2.x 把子模块重命名（plum.function -> plum._function 等）---
-# 本模型 .pkl 是用旧版 plum-dispatch（1.x）序列化的，反序列化时会尝试 import 旧的
-# 模块名（plum.function / plum.resolver / plum.signature ...）。新版里这些模块都已加下划线前缀，
-# 于是 torch.load 抛出 ModuleNotFoundError；而 fastai 的 load_learner 把这个 ImportError
-# 静默吞掉，最终报出令人困惑的 “UnboundLocalError: res”。
-# 这里在加载前把所有 plum._X 反向别名为 plum.X，让旧 pickle 能找到类。
-import plum
-for _m in pkgutil.iter_modules(plum.__path__):
-    if _m.name.startswith("_"):
-        sys.modules.setdefault("plum." + _m.name[1:], importlib.import_module("plum." + _m.name))
-
 from fastai.vision.all import *
 import pathlib
 
